@@ -1,5 +1,6 @@
 package com.example.librarybe.model.dto;
 
+import com.example.librarybe.model.Account;
 import com.example.librarybe.model.Book;
 import com.example.librarybe.model.LendingBook;
 import com.example.librarybe.model.Student;
@@ -17,6 +18,6 @@ import java.util.List;
 public class LendingRequest {
     private int id;
     private LocalDate loanDate;
-    private Student student;
+    private Account account;
     private List<Book> bookList;
 }

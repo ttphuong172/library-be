@@ -7,17 +7,17 @@ import com.example.librarybe.model.LendingBook;
 import com.example.librarybe.model.dto.BookDTO;
 import com.example.librarybe.model.dto.LendingRequest;
 import com.example.librarybe.model.dto.LendingDTO;
+import com.example.librarybe.repository.LendingRepository;
 import com.example.librarybe.service.BookService;
 import com.example.librarybe.service.LendingService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -27,7 +27,10 @@ public class LendingController {
     @Autowired
     private LendingService lendingService;
     @Autowired
+    private LendingRepository lendingRepository;
+    @Autowired
     private BookService bookService;
+
 
     @GetMapping("")
     public ResponseEntity<List<LendingRequest>> findAll(){
@@ -39,7 +42,7 @@ public class LendingController {
             LendingRequest lendingRequest = new LendingRequest();
             lendingRequest.setId(lendingList.get(i).getId());
             lendingRequest.setLoanDate(lendingList.get(i).getLoanDate());
-            lendingRequest.setStudent(lendingList.get(i).getStudent());
+            lendingRequest.setAccount(lendingList.get(i).getAccount());
             List<Book> bookList  = new ArrayList<>();
             for (int j=0;j<lendingList.get(i).getLendingBookList().size();j++){
                 bookList.add(lendingList.get(i).getLendingBookList().get(j).getBook());
@@ -61,7 +64,7 @@ public class LendingController {
         LendingDTO lendingDTO =new LendingDTO();
         lendingDTO.setId(lending.getId());
         lendingDTO.setLoanDate(lending.getLoanDate());
-        lendingDTO.setStudent(lending.getStudent());
+        lendingDTO.setAccount(lending.getAccount());
         List<BookDTO> bookDTOList = new ArrayList<>();
         for (int i=0;i<lending.getLendingBookList().size();i++){
             BookDTO bookDTO =new BookDTO();
@@ -88,12 +91,13 @@ public class LendingController {
     }
 
     @PostMapping("")
+    @Transactional
     public ResponseEntity<String> save(@RequestBody LendingRequest lendingRequest) throws Exception {
 
         Lending lending=new Lending();
 //        lending.setId(lendingDTO.getId());
         lending.setLoanDate(lendingRequest.getLoanDate());
-        lending.setStudent(lendingRequest.getStudent());
+        lending.setAccount(lendingRequest.getAccount());
         List<LendingBook> lendingBookList = new ArrayList<>();
         for (int i = 0; i< lendingRequest.getBookList().size(); i++){
             LendingBook lendingBook=new LendingBook();

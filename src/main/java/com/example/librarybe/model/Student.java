@@ -19,9 +19,8 @@ public class Student {
     private int id;
     private String name;
 
-    @OneToMany(mappedBy = "student")
-//    @JsonIgnore
-    @JsonBackReference
-    List<Lending> lendingList;
+//    @OneToMany(mappedBy = "student")
+//    @JsonBackReference
+//    List<Lending> lendingList;
 
 }

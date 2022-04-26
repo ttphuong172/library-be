@@ -24,10 +24,13 @@ public class Lending {
 
     private LocalDate loanDate;
 
+//    @ManyToOne
+//    @JoinColumn
+//    private Student student;
+
     @ManyToOne
     @JoinColumn
-    private Student student;
-
+    private Account account;
 
     @OneToMany(mappedBy = "lending",cascade = CascadeType.ALL)
     @JsonBackReference

@@ -1,5 +1,6 @@
 package com.example.librarybe.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -17,6 +18,10 @@ public class Library {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+
+    @OneToMany(mappedBy = "library")
+    @JsonIgnore
+    List<Book> bookList;
 
     @OneToMany (mappedBy = "library")
     @JsonIgnore

@@ -10,6 +10,6 @@ public interface BookService {
     List<Book> findAll();
     void delete (Book book);
     Book findById(String id);
-    List<Book> findAllByBookcase_Id(int id);
+    List<Book> findAllByRack_Id(int id);
     List<Book> search(String isbn, String title, String publisher, BookStatus status);
 }

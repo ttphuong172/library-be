@@ -10,7 +10,9 @@ import java.util.List;
 public class RackDTO {
     private int id;
     private String name;
-    private String description;
-    List<Book> bookList;
+//    private String description;
+    private int bookQuantity;
+    private int loanedBook;
+    private int keepingBook;
     private Library library;
 }

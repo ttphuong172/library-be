@@ -1,5 +1,6 @@
 package com.example.librarybe.controller;
 
+import com.example.librarybe.model.Library;
 import com.example.librarybe.model.dto.LibraryDTO;
 import com.example.librarybe.service.LibraryService;
 import org.modelmapper.ModelMapper;
@@ -23,8 +24,9 @@ public class LibraryController {
     @Autowired
     private ModelMapper modelMapper;
     @GetMapping("")
-    public ResponseEntity<List<LibraryDTO>> findAll(){
-        return new ResponseEntity<>(libraryService.findAll().stream().map(library -> modelMapper.map(library, LibraryDTO.class)).collect(Collectors.toList()), HttpStatus.OK);
+    public ResponseEntity<List<Library>> findAll(){
+        return new ResponseEntity<>(libraryService.findAll(),HttpStatus.OK);
+//        return new ResponseEntity<>(libraryService.findAll().stream().map(library -> modelMapper.map(library, LibraryDTO.class)).collect(Collectors.toList()), HttpStatus.OK);
     }
 
 }

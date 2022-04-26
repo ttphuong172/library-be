@@ -34,7 +34,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> findAllByBookcase_Id(int id) {
+    public List<Book> findAllByRack_Id(int id) {
         return bookRepository.findAllByRack_Id(id);
     }
 

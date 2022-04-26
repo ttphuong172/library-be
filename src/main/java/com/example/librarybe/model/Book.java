@@ -39,13 +39,16 @@ public class Book {
 
     @ManyToOne
     @JoinColumn
+    private Library library;
+
+    @ManyToOne
+    @JoinColumn
     private Rack rack;
 
-//    @ManyToMany(mappedBy = "bookList")
-//    @JsonBackReference
-//    private List<Lending> lendingList;
 
-    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+
+//    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "book")
     @JsonBackReference
     private List<LendingBook> lendingBookList;
 

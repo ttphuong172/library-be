@@ -20,4 +20,14 @@ public class RackServiceImpl implements RackService {
     public Rack findById(int id) {
         return rackRepository.findById(id).orElse(null);
     }
+
+    @Override
+    public List<Rack> findAllByLibrary_Name(String name) {
+        return rackRepository.findAllByLibrary_Name(name);
+    }
+
+    @Override
+    public void save(Rack rack) {
+        rackRepository.save(rack);
+    }
 }

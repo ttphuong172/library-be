@@ -14,7 +14,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookDTO {
+public class BookDTO implements Comparable <BookDTO>   {
     private String id;
     private String isbn;
     private String title;
@@ -27,4 +27,19 @@ public class BookDTO {
     private Rack rack;
     private LocalDate loanDate;
     private LocalDate returnDate;
+
+    @Override
+    public int compareTo(BookDTO bookDTO) {
+        int result=0;
+        if (this.getReturnDate()==null && bookDTO.getReturnDate()!=null){
+            result =-1;
+        }
+        else if (this.getReturnDate()!=null && bookDTO.getReturnDate()==null){
+            result =1;
+        }
+        if (this.getReturnDate()!=null && bookDTO.getReturnDate()!=null){
+            result= this.getReturnDate().compareTo(bookDTO.getReturnDate());
+        }
+        return result;
+    }
 }
