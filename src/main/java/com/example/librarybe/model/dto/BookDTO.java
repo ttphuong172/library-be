@@ -38,7 +38,7 @@ public class BookDTO implements Comparable <BookDTO>   {
             result =1;
         }
         if (this.getReturnDate()!=null && bookDTO.getReturnDate()!=null){
-            result= this.getReturnDate().compareTo(bookDTO.getReturnDate());
+            result= bookDTO.getReturnDate().compareTo(this.getReturnDate());
         }
         return result;
     }

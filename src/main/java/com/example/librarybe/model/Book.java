@@ -24,12 +24,10 @@ public class Book {
 
     @ElementCollection
     @CollectionTable(
-            name="authors",
-            joinColumns=@JoinColumn(name="book_id")
+            name = "authors",
+            joinColumns = @JoinColumn(name = "book_id")
     )
     private List<Authors> authors;
-
-
     private int number_of_pages;
 
     private String publisher;
@@ -45,9 +43,7 @@ public class Book {
     @JoinColumn
     private Rack rack;
 
-
-
-//    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    //    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
     @OneToMany(mappedBy = "book")
     @JsonBackReference
     private List<LendingBook> lendingBookList;

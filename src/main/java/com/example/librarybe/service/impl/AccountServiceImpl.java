@@ -19,8 +19,8 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Override
-    public Account findByUsername(String username) {
-        return accountRepository.findByUsername(username);
+    public Account findById(String username) {
+        return accountRepository.findById(username).orElseThrow(()->new UsernameNotFoundException("Not found"));
     }
 
     @Override
@@ -29,12 +29,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account findById(int id) {
-        return accountRepository.findById(id).orElse(null);
+    public List<Account> findAll() {
+        return accountRepository.findAll();
     }
 
     @Override
-    public List<Account> findAll() {
-        return accountRepository.findAll();
+    public Account findByCode(String code) {
+        return accountRepository.findByCode(code);
     }
 }

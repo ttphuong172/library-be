@@ -1,7 +1,6 @@
 package com.example.librarybe.config;
 
 
-
 import com.example.librarybe.model.Account;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -26,14 +25,16 @@ public class MyUserDetails implements UserDetails {
         return authorities;
     }
 
-    @Override
-    public String getPassword() {
-        return account.getPassword();
-    }
 
     @Override
     public String getUsername() {
         return account.getUsername();
+    }
+
+    @Override
+    public String getPassword() {
+        System.out.println(account.getPassword());
+        return account.getPassword();
     }
 
     @Override

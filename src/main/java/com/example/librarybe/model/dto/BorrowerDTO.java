@@ -7,7 +7,7 @@ import java.util.List;
 
 @Data
 public class BorrowerDTO {
-    private int id;
+    private String code;
     private String username;
     private String fullname;
     private EPosition position;

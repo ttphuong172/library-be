@@ -25,6 +25,16 @@ public class AccountController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @GetMapping("{username}")
+    public ResponseEntity<Account> findById(@PathVariable String username) {
+        return new ResponseEntity<>(accountService.findById(username), HttpStatus.OK);
+    }
+
+    @GetMapping("code/{code}")
+    public ResponseEntity<Account> findByUsername(@PathVariable String code) {
+        return new ResponseEntity<>(accountService.findByCode(code), HttpStatus.OK);
+    }
+
     @GetMapping("/borrowers")
     public ResponseEntity<List<BorrowerStatisticsDTO>> findAll() {
         List<Account> accountList = accountService.findAll();
@@ -32,7 +42,7 @@ public class AccountController {
         for (int i = 0; i < accountList.size(); i++) {
             if (accountList.get(i).getLendingList().size() > 0) {
                 BorrowerStatisticsDTO borrowerStatisticsDTO = new BorrowerStatisticsDTO();
-                borrowerStatisticsDTO.setId(accountList.get(i).getId());
+                borrowerStatisticsDTO.setCode(accountList.get(i).getCode());
                 borrowerStatisticsDTO.setUsername(accountList.get(i).getUsername());
                 borrowerStatisticsDTO.setFullname(accountList.get(i).getFullname());
                 borrowerStatisticsDTO.setPosition(accountList.get(i).getPosition());
@@ -61,25 +71,18 @@ public class AccountController {
         return new ResponseEntity<>(borrowerStatisticsDTOList, HttpStatus.OK);
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<Account> findById(@PathVariable int id) {
-        return new ResponseEntity<>(accountService.findById(id), HttpStatus.OK);
-    }
 
-    @GetMapping("username/{username}")
-    public ResponseEntity<Account> findByUsername(@PathVariable String username) {
-        return new ResponseEntity<>(accountService.findByUsername(username), HttpStatus.OK);
-    }
 
-    @GetMapping("borrowers/{id}")
-    protected ResponseEntity<BorrowerDTO> findBorrowerById(@PathVariable int id) {
-        Account account = accountService.findById(id);
+    @GetMapping("borrowers/{username}")
+    protected ResponseEntity<BorrowerDTO> findBorrowerById(@PathVariable String username) {
+        System.out.println(username);
+        Account account = accountService.findById(username);
         if (account == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         BorrowerDTO borrowerDTO = new BorrowerDTO();
 
-        borrowerDTO.setId(account.getId());
+        borrowerDTO.setCode(account.getCode());
         borrowerDTO.setUsername(account.getUsername());
         borrowerDTO.setFullname(account.getFullname());
         borrowerDTO.setPosition(account.getPosition());
@@ -105,17 +108,15 @@ public class AccountController {
                 bookDTOList.add(bookDTO);
             }
         }
-
         //Sort bookDTOList
         Collections.sort(bookDTOList);
-
         borrowerDTO.setBookDTOList(bookDTOList);
         return new ResponseEntity<>(borrowerDTO, HttpStatus.OK);
     }
 
     @PutMapping("changepassword")
     public ResponseEntity<String> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO) throws Exception {
-        Account account = accountService.findByUsername(changePasswordDTO.getUsername());
+        Account account = accountService.findById(changePasswordDTO.getUsername());
         if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), account.getPassword())) {
             throw new Exception("old password is incorrect");
         }

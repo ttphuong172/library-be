@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class BorrowerStatisticsDTO {
-    private int id;
+    private String code;
     private String username;
     private String fullname;
     private EPosition position;

@@ -26,6 +26,7 @@ public class LendingBookController {
     @Autowired
     private BookService bookService;
 
+    ///Danh sach sach da tra
     @GetMapping("")
     public ResponseEntity<List<ReturnDTO>> findAllByReturnDateIsNotNull() {
         List<LendingBook> lendingBookList = lendingBookRepository.findAllByReturnDateIsNotNull();
@@ -43,11 +44,12 @@ public class LendingBookController {
             returnDTO.setLoanDate(lendingBookList.get(i).getLending().getLoanDate());
             returnDTO.setReturnDate(lendingBookList.get(i).getReturnDate());
             returnDTOList.add(returnDTO);
-            Collections.sort(returnDTOList, (o1, o2) -> o2.getId()-o1.getId());
+            Collections.sort(returnDTOList, (o1, o2) -> o2.getId() - o1.getId());
         }
         return new ResponseEntity<>(returnDTOList, HttpStatus.OK);
     }
 
+    //Tim sach chua tra theo id
     @GetMapping("books/{id}")
     public ResponseEntity<ReturnDTO> findAllByBook_IdAndReturnDateIsNull(@PathVariable String id) {
         LendingBook lendingBook = lendingBookRepository.findAllByBook_IdAndReturnDateIsNull(id);
@@ -68,9 +70,7 @@ public class LendingBookController {
     @PostMapping("comfirm")
     @Transactional
     public ResponseEntity<String> comfirmReturn(@RequestBody List<ReturnDTO> returnDTOList) {
-
         for (int i = 0; i < returnDTOList.size(); i++) {
-
             LendingBook lendingBook = lendingBookRepository.findById(returnDTOList.get(i).getId()).orElse(null);
             lendingBook.setReturnDate(LocalDate.now());
             lendingBookRepository.save(lendingBook);

@@ -6,9 +6,9 @@ import com.example.librarybe.model.Account;
 import java.util.List;
 
 public interface AccountService {
-    Account findByUsername(String username);
     void save(Account account);
-    Account findById(int id);
+    Account findById(String username);
     List<Account> findAll();
+    Account findByCode(String code);
 
 }

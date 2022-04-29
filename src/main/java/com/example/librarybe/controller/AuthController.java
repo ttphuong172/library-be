@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,21 +39,20 @@ public class AuthController {
         String token = null;
         String username = null;
         ERole role = null;
+        String message=null;
         UserDetails userDetails;
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            jwtRequest.getUsername(),
-                            jwtRequest.getPassword()
-                    )
-            );
-        } catch (BadCredentialsException e) {
-            return new JwtResponse(token, username,role);
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
+        } catch (DisabledException  e) {
+            return new JwtResponse(token, username,role,"Account disabled !");
+        } catch (BadCredentialsException  e) {
+            return new JwtResponse(token, username,role,"Username or password is incorrect !");
         }
+
         userDetails = myUserDetailsService.loadUserByUsername(jwtRequest.getUsername());
         token = jwtUtil.generateToken(userDetails);
-        username=jwtRequest.getUsername();
-        role = accountService.findByUsername(jwtRequest.getUsername()).getRole();
-        return new JwtResponse(token, username, role);
+        username = jwtRequest.getUsername();
+        role = accountService.findById(jwtRequest.getUsername()).getRole();
+        return new JwtResponse(token, username, role,"Login succesfull");
     }
 }

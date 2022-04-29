@@ -19,7 +19,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountService.findByUsername(username);
+        Account account = accountService.findById(username);
         return new MyUserDetails(account);
     }
 }

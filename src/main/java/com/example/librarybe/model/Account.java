@@ -16,11 +16,12 @@ import java.util.List;
 @Entity
 public class Account {
     @Id
-    private int id;
-
     private String username;
     private String password;
     private String fullname;
+
+    private String code;
+
     @Enumerated(EnumType.STRING)
     private EPosition position;
     @Enumerated(EnumType.STRING)
