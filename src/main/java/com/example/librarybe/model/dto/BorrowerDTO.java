@@ -10,6 +10,6 @@ public class BorrowerDTO {
     private String code;
     private String username;
     private String fullname;
-    private EPosition position;
+    private String position;
     List<BookDTO> bookDTOList;
 }

@@ -62,6 +62,37 @@ public class RackController {
         return new ResponseEntity<>(rack, HttpStatus.OK);
     }
 
+    @GetMapping("library/dto/{name}")
+    public ResponseEntity<List<RackDTO>> findAllDTOByLibrary_Name(@PathVariable String name){
+        List<Rack> rackList=rackService.findAllByLibrary_Name(name);
+        List<RackDTO> rackDTOList = new ArrayList<>();
+
+        for (int i = 0; i < rackList.size(); i++) {
+            RackDTO rackDTO = new RackDTO();
+            rackDTO.setId(rackList.get(i).getId());
+            rackDTO.setName(rackList.get(i).getName());
+            rackDTO.setLibrary(rackList.get(i).getLibrary());
+
+            int bookQuantity = 0;
+            int loanedQuantity=0;
+            int keepingQuantity=0;
+            for (int j = 0; j < rackList.get(i).getBookList().size(); j++) {
+                bookQuantity++;
+                if (rackList.get(i).getBookList().get(j).getStatus()== BookStatus.LOANED){
+                    loanedQuantity++;
+                } else {
+                    keepingQuantity++;
+                }
+            }
+            rackDTO.setBookQuantity(bookQuantity);
+            rackDTO.setLoanedBook(loanedQuantity);
+            rackDTO.setKeepingBook(keepingQuantity);
+
+            rackDTOList.add(rackDTO);
+        }
+        return new ResponseEntity<>(rackDTOList, HttpStatus.OK);
+    }
+
     @GetMapping("library/{name}")
     public ResponseEntity<List<Rack>> findAllByLibrary_Name(@PathVariable String name) {
         return new ResponseEntity<>(rackService.findAllByLibrary_Name(name), HttpStatus.OK);

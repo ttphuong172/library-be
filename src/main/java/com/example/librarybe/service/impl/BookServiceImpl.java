@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -39,7 +40,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<Book> search(String isbn, String title, String publisher, BookStatus bookStatus) {
-        return bookRepository.search(isbn,title,publisher,bookStatus);
+    public List<Book> search(String isbn, String title, String publisher, BookStatus bookStatus, Optional<Integer> idLibrary, Optional<Integer> idRack) {
+        return bookRepository.search(isbn,title,publisher,bookStatus,idLibrary,idRack);
     }
 }

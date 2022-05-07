@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/books")
@@ -53,10 +54,14 @@ public class BookController {
     }
 
     @PostMapping("")
-    public ResponseEntity<String> save(@RequestBody Book book) {
+    public ResponseEntity<Book> save(@RequestBody Book book) {
+        Book bookCurrent = bookService.findById(book.getId());
+        if (bookCurrent != null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         book.setStatus(BookStatus.AVAILABLE);
         bookService.save(book);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(book, HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")
@@ -89,8 +94,8 @@ public class BookController {
     }
 
     @GetMapping("search")
-    public ResponseEntity<List<Book>> search(@RequestParam(required = false) String isbn, @RequestParam(required = false) String title, @RequestParam(required = false) String publisher, @RequestParam(required = false) BookStatus status) {
-        return new ResponseEntity<>(bookService.search(isbn, title, publisher, status), HttpStatus.OK);
+    public ResponseEntity<List<Book>> search(@RequestParam(required = false) String isbn, @RequestParam(required = false) String title, @RequestParam(required = false) String publisher, @RequestParam(required = false) BookStatus status, Optional<Integer> idLibrary,Optional<Integer> idRack) {
+        return new ResponseEntity<>(bookService.search(isbn, title, publisher, status, idLibrary,idRack), HttpStatus.OK);
     }
 
 }

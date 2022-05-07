@@ -2,18 +2,18 @@ package com.example.librarybe.controller;
 
 
 import com.example.librarybe.model.Account;
+import com.example.librarybe.model.Book;
 import com.example.librarybe.model.dto.*;
 import com.example.librarybe.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.*;
 
 @RestController
 @RequestMapping("api/accounts")
@@ -24,6 +24,45 @@ public class AccountController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @GetMapping("")
+    public ResponseEntity<List<Account>> findAll() {
+        return new ResponseEntity<>(accountService.findAll(), HttpStatus.OK);
+    }
+
+    @PostMapping("")
+    public ResponseEntity<Account> save(@RequestBody Account account) {
+        Account accountByCode = accountService.findByCode(account.getCode());
+        System.out.println("Code" + accountByCode);
+
+        Account accountByUsername = accountService.findById(account.getUsername());
+        System.out.println("Username" + accountByUsername);
+
+        if (accountByCode == null && accountByUsername==null )  {
+            account.setPassword(passwordEncoder.encode(account.getPassword()));
+            accountService.save(account);
+            return new ResponseEntity<>(account, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        }
+    }
+
+    @PutMapping("{username}")
+    public ResponseEntity<String> update(@PathVariable String username,@RequestBody Account account){
+        Account accountCurrent=accountService.findById(username);
+        if (accountCurrent ==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        accountCurrent.setFullname(account.getFullname());
+        accountCurrent.setPassword(passwordEncoder.encode(account.getPassword()));
+        accountCurrent.setPosition(account.getPosition());
+        accountCurrent.setRole(account.getRole());
+        accountCurrent.setEnable(account.isEnable());
+
+        accountService.save(accountCurrent);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @GetMapping("{username}")
     public ResponseEntity<Account> findById(@PathVariable String username) {
@@ -36,7 +75,7 @@ public class AccountController {
     }
 
     @GetMapping("/borrowers")
-    public ResponseEntity<List<BorrowerStatisticsDTO>> findAll() {
+    public ResponseEntity<List<BorrowerStatisticsDTO>> findAllBorrower() {
         List<Account> accountList = accountService.findAll();
         List<BorrowerStatisticsDTO> borrowerStatisticsDTOList = new ArrayList<>();
         for (int i = 0; i < accountList.size(); i++) {
@@ -58,7 +97,6 @@ public class AccountController {
                         } else {
                             keepingQuantity++;
                         }
-
                     }
                 }
                 borrowerStatisticsDTO.setBookQuantity(bookQuantity);
@@ -72,9 +110,8 @@ public class AccountController {
     }
 
 
-
     @GetMapping("borrowers/{username}")
-    protected ResponseEntity<BorrowerDTO> findBorrowerById(@PathVariable String username) {
+    public ResponseEntity<BorrowerDTO> findBorrowerById(@PathVariable String username) {
         System.out.println(username);
         Account account = accountService.findById(username);
         if (account == null) {
@@ -90,7 +127,6 @@ public class AccountController {
         for (int j = 0; j < account.getLendingList().size(); j++) {
             for (int k = 0; k < account.getLendingList().get(j).getLendingBookList().size(); k++) {
                 BookDTO bookDTO = new BookDTO();
-
                 bookDTO.setId(account.getLendingList().get(j).getLendingBookList().get(k).getBook().getId());
                 bookDTO.setIsbn(account.getLendingList().get(j).getLendingBookList().get(k).getBook().getIsbn());
                 bookDTO.setTitle(account.getLendingList().get(j).getLendingBookList().get(k).getBook().getTitle());
@@ -126,5 +162,26 @@ public class AccountController {
         account.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         accountService.save(account);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("search")
+    public ResponseEntity<List<Account>> search(@RequestParam(required = false) String code,@RequestParam(required = false) String username,@RequestParam(required = false) String fullname,@RequestParam(required = false) String position){
+        return new ResponseEntity<>(accountService.search(code,username,fullname,position),HttpStatus.OK);
+    }
+
+    @DeleteMapping("{username}")
+    public ResponseEntity<Account> delete (@PathVariable String username){
+        Account account = accountService.findById(username);
+        if (account == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        try{
+            accountService.delete(account);
+        } catch (DataIntegrityViolationException e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(account,HttpStatus.OK);
     }
 }

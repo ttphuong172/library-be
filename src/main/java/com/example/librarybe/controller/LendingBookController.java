@@ -54,7 +54,7 @@ public class LendingBookController {
     public ResponseEntity<ReturnDTO> findAllByBook_IdAndReturnDateIsNull(@PathVariable String id) {
         LendingBook lendingBook = lendingBookRepository.findAllByBook_IdAndReturnDateIsNull(id);
         if (lendingBook == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         ReturnDTO returnDTO = new ReturnDTO();
         returnDTO.setId(lendingBook.getId());

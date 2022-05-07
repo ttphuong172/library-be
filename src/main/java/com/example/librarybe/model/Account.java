@@ -22,8 +22,10 @@ public class Account {
 
     private String code;
 
-    @Enumerated(EnumType.STRING)
-    private EPosition position;
+//    @Enumerated(EnumType.STRING)
+//    private EPosition position;
+    private String position;
+
     @Enumerated(EnumType.STRING)
     private ERole role;
 
@@ -31,5 +33,6 @@ public class Account {
     @JsonBackReference
     List<Lending> lendingList;
 
+    private boolean enable=true;
 
 }

@@ -10,7 +10,7 @@ public class BorrowerStatisticsDTO {
     private String code;
     private String username;
     private String fullname;
-    private EPosition position;
+    private String position;
     private int bookQuantity;
     private int returnedQuantity;
     private int keepingQuantity;
